@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Currency Exchange · Nobu Bank · Leonardo Budi</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,300;1,9..144,700&amp;family=Inter:wght@300;400;500;600&amp;family=UnifrakturMaguntia&amp;display=swap" rel="stylesheet"/>
+<style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      /* ── Type scale: base 16px, min 10px ── */
+      --fs-2xs: 10px; --fs-xs: 12px; --fs-sm: 14px; --fs-base: 16px;
+      --fs-lg: 18px; --fs-xl: 22px; --fs-2xl: 28px; --fs-3xl: 36px; --fs-4xl: 46px;
+      --bg: #0A0A0A;
+      --bg-card: #111111;
+      --bg-card-hover: #171717;
+      --text: #F0EFE9;
+      --text-muted: #8C8C84;
+      --accent: #C8F135;
+      --border: #1C1C1C;
+      --section-num: #7C7C75;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    a:focus-visible, button:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 3px;
+      border-radius: 2px;
+    }
+
+    /* ── CURSOR ── */
+    .cursor {
+      position: fixed; top: 0; left: 0;
+      width: 10px; height: 10px;
+      background: var(--accent);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: width .22s ease, height .22s ease, background .22s ease, border .22s ease;
+      will-change: left, top;
+    }
+    .cursor.hover {
+      width: 42px; height: 42px;
+      background: transparent;
+      border: 1.5px solid var(--accent);
+    }
+    .cursor.hover.on-light {
+      background: transparent;
+      border: 1.5px solid rgba(10,10,10,0.65);
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 28px 64px;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+    nav::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, rgba(10,10,10,.78) 0%, rgba(10,10,10,.5) 70%, rgba(10,10,10,.3) 100%);
+      pointer-events: none;
+    }
+    .nav-back {
+      display: flex; align-items: center; gap: 10px;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 12px; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      position: relative; z-index: 1;
+      transition: color .2s;
+    }
+    .nav-back:hover { color: var(--accent); }
+    .nav-back svg { transition: transform .2s; }
+    .nav-back:hover svg { transform: translateX(-3px); }
+    .nav-logo {
+      font-family: 'UnifrakturMaguntia', 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 48px;
+      line-height: 1;
+      color: var(--text);
+      text-decoration: none;
+      position: relative; z-index: 1;
+      letter-spacing: 0;
+    }
+    .nav-logo em { font-style: italic; color: var(--accent); }
+
+    /* ── HERO ── */
+    .case-hero {
+      padding: 160px 64px 80px;
+      max-width: 1100px;
+    }
+    .case-eyebrow {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+      display: flex; align-items: center; gap: 12px;
+    }
+    .case-eyebrow::before {
+      content: ''; width: 28px; height: 1px;
+      background: var(--accent); opacity: .55;
+    }
+    .case-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: clamp(38px, 5.5vw, 72px);
+      letter-spacing: -.03em;
+      line-height: 1.05;
+      margin-bottom: 28px;
+      max-width: 900px;
+    }
+    .case-hook {
+      font-size: var(--fs-lg);
+      color: var(--text-muted);
+      max-width: 560px;
+      line-height: 1.7;
+    }
+
+    /* ── META GRID ── */
+    .case-meta {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      margin: 0 64px;
+    }
+    .meta-item {
+      padding: 28px 32px;
+      background: var(--bg-card);
+    }
+    .meta-label {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 10px;
+    }
+    .meta-value {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: -.01em;
+      color: var(--text);
+    }
+
+    /* ── HERO IMAGE ── */
+    .case-hero-img {
+      margin: 80px 64px;
+      height: 520px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #051a08 0%, #0a3010 45%, #060f07 100%);
+    }
+    .case-hero-img::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(200,241,53,0.08) 0%, transparent 45%),
+        radial-gradient(circle at 75% 70%, rgba(200,241,53,0.04) 0%, transparent 40%);
+    }
+    .case-hero-img .img-tag {
+      position: absolute; bottom: 24px; left: 24px;
+      font-size: 11px; letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.18);
+    }
+
+    /* ── CONTENT SECTIONS ── */
+    .case-section {
+      padding: 90px 64px;
+      border-top: 1px solid var(--border);
+    }
+    .case-section.tight { padding-top: 0; border-top: none; }
+    .section-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 80px;
+      max-width: 1200px;
+      align-items: start;
+    }
+    .section-tag-wrap {
+      position: sticky;
+      top: 120px;
+      align-self: start;
+      height: fit-content;
+    }
+    .section-num {
+      font-family: 'Fraunces', serif;
+      font-weight: 300;
+      font-style: italic;
+      font-size: 56px;
+      color: var(--section-num);
+      line-height: 1;
+      margin-bottom: 16px;
+      transition: color .4s ease;
+    }
+    .section-grid.in-view .section-num { color: var(--accent); opacity: .7; }
+    .section-progress-label {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--text-muted);
+    }
+    .case-h2 {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: clamp(28px, 3.2vw, 44px);
+      letter-spacing: -.03em;
+      line-height: 1.1;
+      margin-bottom: 24px;
+    }
+    .case-h2 .accent { color: var(--accent); }
+    .case-body {
+      font-size: var(--fs-lg);
+      color: var(--text-muted);
+      line-height: 1.8;
+      max-width: 620px;
+    }
+    .case-body p + p { margin-top: 18px; }
+    .case-body strong { color: var(--text); font-weight: 600; }
+
+    /* sub-block used for "user profile / business need / design constraint" style stacks */
+    .info-stack { margin-top: 36px; display: flex; flex-direction: column; gap: 28px; }
+    .info-block {
+      padding-left: 20px;
+      border-left: 2px solid var(--border);
+    }
+    .info-label {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: var(--fs-lg);
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .info-text {
+      font-size: var(--fs-lg);
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    /* ── IMAGE BLOCK INSIDE SECTIONS ── */
+    .section-img {
+      width: 100%;
+      height: 340px;
+      margin: 40px 0;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(135deg, #0d1f05 0%, #1a3a08 50%, #0a100a 100%);
+    }
+    .section-img.alt {
+      background: linear-gradient(135deg, #1a1208 0%, #3a2410 50%, #0f0a06 100%);
+    }
+    .section-img .img-tag {
+      position: absolute; bottom: 20px; left: 20px;
+      font-size: 10px; letter-spacing: .08em; text-transform: uppercase;
+      color: rgba(255,255,255,.18);
+    }
+    .img-caption {
+      font-size: var(--fs-sm);
+      color: var(--text-muted);
+      margin-top: 14px;
+      font-style: italic;
+    }
+
+    /* ── BULLET LIST ── */
+    .case-list {
+      margin-top: 20px;
+      display: flex; flex-direction: column; gap: 14px;
+    }
+    .case-list-item {
+      display: flex; gap: 14px;
+      font-size: var(--fs-lg); color: var(--text-muted); line-height: 1.6;
+    }
+    .case-list-item::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+      margin-top: 8px;
+    }
+
+    /* ── WHY IT WORKS / CARDS ── */
+    .reason-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 40px;
+    }
+    .reason-card {
+      background: var(--bg-card);
+      padding: 28px 26px;
+      border-left: 2px solid var(--accent);
+    }
+    .reason-text {
+      font-size: var(--fs-base);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    /* ── ROLE / CONSIDERATIONS two-col ── */
+    .role-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      max-width: 1100px;
+    }
+    .role-col-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 20px;
+      margin-bottom: 20px;
+      letter-spacing: -.01em;
+    }
+
+    /* ── REFLECTION CALLOUT ── */
+    .reflection {
+      max-width: 760px;
+      padding: 44px 48px;
+      background: var(--bg-card);
+      border-left: 2px solid var(--accent);
+    }
+    .reflection-label {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .14em; text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 16px;
+    }
+    .reflection-text {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(18px, 2vw, 24px);
+      font-weight: 500;
+      line-height: 1.5;
+      color: var(--text);
+    }
+
+    /* ── MORE PROJECTS GRID ── */
+    .more-projects {
+      padding: 100px 64px;
+      border-top: 1px solid var(--border);
+    }
+    .more-header {
+      margin-bottom: 56px;
+    }
+    .more-label {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .16em; text-transform: uppercase;
+      color: var(--accent);
+      display: flex; align-items: center; gap: 14px;
+      margin-bottom: 20px;
+    }
+    .more-label::after { content: ''; width: 32px; height: 1px; background: var(--accent); opacity: .35; }
+    .more-title {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: clamp(28px, 3.5vw, 44px);
+      letter-spacing: -.03em;
+    }
+    .more-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+    }
+    .more-grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+    .more-card {
+      background: var(--bg-card);
+      text-decoration: none; color: inherit;
+      display: block;
+      border-left: 2px solid transparent;
+      transition: background .25s, border-color .25s;
+    }
+    .more-card:hover { background: var(--bg-card-hover); border-left-color: var(--accent); }
+    .more-card-inner { padding: 32px; position: relative; }
+    .more-img {
+      width: 100%; aspect-ratio: 3 / 2;
+      margin-bottom: 22px;
+      position: relative; overflow: hidden;
+    }
+    .more-img::before { content: ''; position: absolute; inset: 0; transition: transform .5s cubic-bezier(.16,1,.3,1); }
+    .more-card:hover .more-img::before { transform: scale(1.04); }
+    .more-tag {
+      font-size: 10px; font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .more-title-card {
+      font-family: 'Fraunces', serif;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -.015em;
+      line-height: 1.3;
+      padding-right: 36px;
+      transition: color .25s;
+    }
+    .more-card:hover .more-title-card { color: var(--accent); }
+    .more-arrow {
+      position: absolute; bottom: 32px; right: 32px;
+      width: 30px; height: 30px;
+      border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      transition: background .22s, border-color .22s, transform .28s;
+    }
+    .more-card:hover .more-arrow { background: var(--accent); border-color: var(--accent); transform: rotate(45deg); }
+    .more-card:hover .more-arrow path { stroke: #0A0A0A; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 64px;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-left { font-size: var(--fs-sm); color: var(--text-muted); }
+    .footer-right { font-family: 'Fraunces', serif; font-style: italic; font-size: var(--fs-base); color: var(--text-muted); }
+
+    /* ── REVEAL ── */
+    .reveal {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity .8s ease, transform .8s cubic-bezier(.16,1,.3,1);
+    }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      body { cursor: auto; }
+      .cursor { display: none; }
+      nav { padding: 20px 24px; }
+      .case-hero { padding: 110px 24px 56px; }
+      .case-meta { margin: 0 24px; grid-template-columns: 1fr 1fr; }
+      .case-hero-img { margin: 56px 24px; height: 280px; }
+      .case-section { padding: 64px 24px; }
+      .section-grid { grid-template-columns: 1fr; gap: 32px; }
+      .section-tag-wrap { position: static; display: flex; align-items: center; gap: 14px; }
+      .section-num { font-size: 32px; margin-bottom: 0; }
+      .section-img { height: 220px; }
+      .reason-grid { grid-template-columns: 1fr; }
+      .role-grid { grid-template-columns: 1fr; gap: 40px; }
+      .reflection { padding: 32px 28px; }
+      .more-projects { padding: 64px 24px; }
+      .more-grid.cols-2, .more-grid { grid-template-columns: 1fr; }
+      footer { padding: 24px; flex-direction: column; gap: 10px; text-align: center; }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .case-hero { padding: 140px 40px 64px; }
+      .case-meta { margin: 0 40px; }
+      .case-hero-img { margin: 64px 40px; }
+      .case-section { padding: 72px 40px; }
+      .section-grid { grid-template-columns: 240px 1fr; gap: 48px; }
+      .more-projects { padding: 80px 40px; }
+      footer { padding: 28px 40px; }
+    }
+  
+    /* ── OPTION 3: PROGRESS RAIL ── */
+    .case-layout {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 72px;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 48px 64px 0;
+      align-items: start;
+    }
+    .case-content .case-section { padding: 72px 0; scroll-margin-top: 100px; }
+    .case-content .case-section:first-child { border-top: none; padding-top: 8px; }
+    .case-rail {
+      position: sticky;
+      top: 120px;
+      display: flex;
+      flex-direction: column;
+      border-left: 1px solid var(--border);
+    }
+    .rail-item {
+      display: flex; align-items: baseline; gap: 12px;
+      padding: 11px 0 11px 18px;
+      margin-left: -1px;
+      border-left: 2px solid transparent;
+      text-decoration: none;
+      color: var(--text-muted);
+      transition: color .25s, border-color .25s;
+    }
+    .rail-item:hover { color: var(--text); }
+    .rail-num {
+      font-family: 'Fraunces', serif; font-style: italic; font-weight: 300;
+      font-size: 15px; color: var(--section-num);
+      transition: color .25s;
+    }
+    .rail-label {
+      font-size: 11px; font-weight: 500;
+      letter-spacing: .12em; text-transform: uppercase;
+    }
+    .rail-item.active { color: var(--accent); border-left-color: var(--accent); }
+    .rail-item.active .rail-num { color: var(--accent); }
+    @media (max-width: 768px) {
+      .case-layout { grid-template-columns: 1fr; padding: 0 24px; gap: 0; }
+      .case-rail { display: none; }
+      .case-content .case-section { padding: 48px 0; }
+    }
+    @media (min-width: 769px) and (max-width: 1024px) {
+      .case-layout { grid-template-columns: 180px 1fr; gap: 48px; padding: 40px 40px 0; }
+    }
+  
+    /* ── OPTION 3: MOBILE SECTION LABELS (mirror the rail) ── */
+    .section-mobile-tag { display: none; }
+    @media (max-width: 768px) {
+      .section-mobile-tag {
+        display: flex;
+        align-items: baseline;
+        gap: 10px;
+        margin-bottom: 22px;
+        padding-bottom: 14px;
+        border-bottom: 1px solid var(--border);
+      }
+      .section-mobile-tag .num {
+        font-family: 'Fraunces', serif;
+        font-style: italic; font-weight: 300;
+        font-size: 22px; line-height: 1;
+        color: var(--accent);
+      }
+      .section-mobile-tag .label {
+        font-size: 11px; font-weight: 500;
+        letter-spacing: .14em; text-transform: uppercase;
+        color: var(--text-muted);
+      }
+    }
+  
+    /* ════ CLICKABLE IMAGES + LIGHTBOX ════ */
+    .shot { display: block; }
+    .shot-frame {
+      appearance: none; -webkit-appearance: none;
+      display: block; width: 100%; padding: 0; margin: 0; font: inherit; color: inherit;
+      position: relative; overflow: hidden; cursor: pointer;
+      border: 1px solid var(--border);
+      transition: border-color .25s, filter .25s;
+    }
+    .shot-frame:hover { border-color: rgba(200,241,53,.45); }
+    .shot-frame > img { display: block; width: 100%; height: 100%; object-fit: cover; }
+    .shot-caption {
+      margin-top: 14px;
+      font-size: var(--fs-xs); font-weight: 500;
+      letter-spacing: .08em; text-transform: uppercase; color: var(--text-muted);
+    }
+    .case-shot { margin: 80px 64px; }
+    .case-shot.inline { margin: 44px 0; }
+    .shot-frame.ts-hero {
+      aspect-ratio: 16 / 9; border: none;
+      background: linear-gradient(135deg, #051a08 0%, #0a3010 45%, #060f07 100%);
+    }
+    .shot-frame.ts-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 30% 30%, rgba(200,241,53,0.08) 0%, transparent 45%),
+        radial-gradient(circle at 75% 70%, rgba(200,241,53,0.04) 0%, transparent 40%);
+    }
+    .shot-frame.ts-sec { aspect-ratio: 16 / 9; border: none;
+      background: linear-gradient(135deg, #0d1f05 0%, #1a3a08 50%, #0a100a 100%); }
+    .shot-frame.ts-sec.ts-alt { background: linear-gradient(135deg, #1a1208 0%, #3a2410 50%, #0f0a06 100%); }
+    .shot-frame.ts-hero:hover, .shot-frame.ts-sec:hover { filter: brightness(1.1); border-color: transparent; }
+
+    .lightbox {
+      position: fixed; inset: 0; z-index: 200; background: rgba(6,6,6,.92);
+      backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+      display: flex; align-items: center; justify-content: center; padding: 40px;
+      opacity: 0; transition: opacity .25s ease;
+    }
+    .lightbox.open { opacity: 1; }
+    .lightbox-stage { display: flex; flex-direction: column; align-items: center; gap: 18px; max-width: 92vw; }
+    .lightbox .shot-frame { cursor: auto; }
+    .lightbox .shot-frame:hover { filter: none; }
+    .lightbox .shot-frame.ts-hero, .lightbox .shot-frame.ts-sec { width: min(92vw, 1000px); }
+    .lightbox-cap { font-size: 11px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--text-muted); }
+    .lightbox-close {
+      position: fixed; top: 24px; right: 28px; width: 44px; height: 44px; border-radius: 50%;
+      background: rgba(255,255,255,.06); border: 1px solid var(--border); color: var(--text);
+      font-size: 22px; line-height: 1; display: flex; align-items: center; justify-content: center;
+      cursor: pointer; transition: background .2s, border-color .2s;
+    }
+    .lightbox-close:hover { background: rgba(255,255,255,.12); border-color: var(--accent); }
+    @media (max-width: 768px) { .case-shot { margin: 56px 24px; } .lightbox { padding: 20px; } }
+    @media (min-width: 769px) and (max-width: 1024px) { .case-shot { margin: 64px 40px; } }
+  
+    /* ── CONTACT CTA ── */
+    .case-contact { padding: 110px 64px; border-top: 1px solid var(--border); text-align: center; }
+    .cc-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); margin-bottom: 18px; }
+    .cc-title { font-family: 'Fraunces', serif; font-weight: 700; font-size: clamp(30px, 4vw, 46px); letter-spacing: -.02em; line-height: 1.1; margin-bottom: 34px; }
+    .cc-links { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .cc-links a { display: inline-flex; align-items: center; gap: 8px; padding: 14px 26px; font-size: 14px; font-weight: 500; text-decoration: none; border-radius: 2px; transition: all .2s; }
+    .cc-primary { background: var(--accent); color: #0A0A0A; }
+    .cc-primary:hover { filter: brightness(1.08); }
+    .cc-secondary { border: 1px solid var(--border); color: var(--text); }
+    .cc-secondary:hover { border-color: var(--accent); color: var(--accent); }
+    @media (max-width: 768px) { .case-contact { padding: 72px 24px; } }
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+<nav>
+<a class="nav-back" href="index.html">
+<svg aria-hidden="true" fill="none" height="14" viewbox="0 0 14 14" width="14"><path d="M11 7H3M3 7L7 3M3 7L7 11" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+    Back to Home
+  </a>
+<a class="nav-logo" href="index.html">Leo<em>.</em></a>
+</nav>
+
+<main>
+<!-- HERO -->
+<section class="case-hero">
+<p class="case-eyebrow reveal">UX Case Study · Nobu Bank</p>
+<h1 class="case-title reveal">Currency Exchange, built into nobu Go</h1>
+<p class="case-hook reveal">Real money, live rates, split-second decisions. The job was making all of that feel simple, without hiding what users needed to know.</p>
+</section>
+<div class="case-meta reveal">
+<div class="meta-item"><div class="meta-label">Client</div><div class="meta-value">Bank Nobu</div></div>
+<div class="meta-item"><div class="meta-label">Role</div><div class="meta-value">Sr. Product Designer</div></div>
+<div class="meta-item"><div class="meta-label">Platform</div><div class="meta-value">iOS &amp; Android</div></div>
+<div class="meta-item"><div class="meta-label">Status</div><div class="meta-value">Live in production</div></div>
+</div>
+<figure class="case-shot reveal">
+<button class="shot-frame ts-hero" data-caption="Currency Exchange · nobu Go (Final Design)" aria-label="Enlarge: Currency Exchange final design"></button>
+<figcaption class="shot-caption">Currency Exchange · nobu Go (Final Design)</figcaption>
+</figure>
+<div class="case-layout"><aside class="case-rail"><a class="rail-item active" href="#context"><span class="rail-num">01</span><span class="rail-label">Context</span></a><a class="rail-item" href="#my-role"><span class="rail-num">02</span><span class="rail-label">My Role</span></a><a class="rail-item" href="#landscape"><span class="rail-num">03</span><span class="rail-label">Landscape</span></a><a class="rail-item" href="#challenge"><span class="rail-num">04</span><span class="rail-label">Challenge</span></a><a class="rail-item" href="#explorations"><span class="rail-num">05</span><span class="rail-label">Explorations</span></a><a class="rail-item" href="#principle"><span class="rail-num">06</span><span class="rail-label">Principle</span></a><a class="rail-item" href="#final"><span class="rail-num">07</span><span class="rail-label">Final Design</span></a><a class="rail-item" href="#reflection"><span class="rail-num">08</span><span class="rail-label">Reflection</span></a></aside><div class="case-content"><section class="case-section tight" id="context"><div class="section-mobile-tag" aria-hidden="true"><span class="num">01</span><span class="label">Context</span></div>
+
+<div class="reveal">
+<h2 class="case-h2">Meet Nobu Bank,<br/><span class="accent">and the gap.</span></h2>
+<div class="case-body">
+<p>Nobu is a growing mid-sized Indonesian bank with 120,000+ users on its mobile app, nobu Go. But one thing was missing. Customers who wanted to buy or hold foreign currency still had to walk into a branch. Competitors had already solved this digitally, and that gap became this project.</p>
+</div>
+<figure class="case-shot inline reveal">
+<button class="shot-frame ts-sec" data-caption="Nobu Bank · nobu Go mobile app" aria-label="Enlarge: Nobu Bank"></button>
+<figcaption class="shot-caption">Nobu Bank · nobu Go mobile app</figcaption>
+</figure>
+</div></section><section class="case-section" id="my-role"><div class="section-mobile-tag" aria-hidden="true"><span class="num">02</span><span class="label">My Role</span></div>
+
+<div class="reveal">
+<h2 class="case-h2">I took it over <span class="accent">mid-project.</span></h2>
+<div class="case-body">
+<p>I picked up the exchange flow after the lead designer moved to another project. Competitive benchmarking was already done, so my work ran from design exploration all the way through to final handoff.</p>
+</div>
+<div class="info-stack">
+<div class="info-block">
+<div class="info-label">Key Constraints</div>
+<div class="info-text">Tight timeline, limited resources, and backend dependencies that shaped what we could realistically build.</div>
+</div>
+<div class="info-block">
+<div class="info-label">The Goal</div>
+<div class="info-text">Design an exchange flow that felt simple but stayed transparent. Easy to use, without hiding anything that mattered.</div>
+</div>
+</div>
+</div></section><section class="case-section" id="landscape"><div class="section-mobile-tag" aria-hidden="true"><span class="num">03</span><span class="label">Landscape</span></div>
+
+<div class="reveal">
+<h2 class="case-h2">What competitors<br/><span class="accent">were doing.</span></h2>
+<div class="case-body">
+<p>I reviewed 7 Indonesian banking apps, and one pattern shaped everything: nobody put the full picture together. Both sides of the transaction, a clear live rate, and your account balance, all visible before you even start typing. That was the gap.</p>
+</div>
+<figure class="case-shot inline reveal">
+<button class="shot-frame ts-sec" data-caption="Competitor review · CIMB, BLU by BCA, myBCA" aria-label="Enlarge: competitor review"></button>
+<figcaption class="shot-caption">Competitor review · CIMB · BLU by BCA · myBCA</figcaption>
+</figure>
+<div class="case-list" style="margin-top:32px;">
+<div class="case-list-item"><strong>CIMB:</strong> transfer framing, no rate shown, no account balance, one side at a time.</div>
+<div class="case-list-item"><strong>BLU by BCA:</strong> closest structurally, both fields visible, but no balance on the main screen.</div>
+<div class="case-list-item"><strong>myBCA:</strong> the most sophisticated rate handling, a 59-second countdown, but only at the confirmation stage.</div>
+</div>
+</div></section><section class="case-section" id="challenge"><div class="section-mobile-tag" aria-hidden="true"><span class="num">04</span><span class="label">Challenge</span></div>
+
+<div class="reveal">
+<h2 class="case-h2">One screen. <span class="accent">A lot to solve.</span></h2>
+<div class="case-body">
+<p>Currency exchange sounds simple, until you actually design it. Six things had to live on one screen, and every one of them had to be visible, clear, and reliable at the same time. That is what made it harder than it looks.</p>
+</div>
+<figure class="case-shot inline reveal">
+<button class="shot-frame ts-sec" data-caption="Six elements, one screen" aria-label="Enlarge: the screen annotated"></button>
+<figcaption class="shot-caption">Six elements, one screen</figcaption>
+</figure>
+<div class="case-list" style="margin-top:32px;">
+<div class="case-list-item">Two active fields, buy and sell.</div>
+<div class="case-list-item">The destination account.</div>
+<div class="case-list-item">The source of fund.</div>
+<div class="case-list-item">Transaction purpose and additional information.</div>
+<div class="case-list-item">A compliance disclaimer.</div>
+<div class="case-list-item">A live rate, with a swap control.</div>
+</div>
+</div></section><section class="case-section" id="explorations"><div class="section-mobile-tag" aria-hidden="true"><span class="num">05</span><span class="label">Explorations</span></div>
+
+<div class="reveal">
+<h2 class="case-h2">Three explorations.<br/><span class="accent">Each one taught me something.</span></h2>
+<div class="case-body">
+<p>The strongest part of this project was the messy middle. Each exploration failed in a specific way, and each failure pushed the design closer to something that actually worked.</p>
+</div>
+</div>
+<div class="reveal" style="margin-top:56px;">
+<div class="info-label" style="color:var(--accent);">Exploration 1 · Tabs</div>
+<h3 class="case-h2" style="font-size:clamp(24px,3vw,34px); margin-top:12px;">Logical on paper. <span class="accent">Broken in practice.</span></h3>
+<div class="case-body">
+<p>The first instinct was tabs: separate buy and sell so users aren't hit with both sides at once. It looked like the right way to reduce load. But building it revealed something the layout couldn't fix. With no source of fund on screen, users had no idea which account the money came from. The rate was there but buried in text, and nothing made it feel live or trustworthy. Three trust problems on one screen. The problem was never focus. It was information.</p>
+</div>
+<figure class="case-shot inline reveal">
+<button class="shot-frame ts-sec" data-caption="Exploration 1 · Tabs" aria-label="Enlarge: Exploration 1 · Tabs"></button>
+</figure>
+<p class="img-caption">One side at a time, a buried rate, and a currency selector that read as 'equivalent' rather than a real swap.</p>
+</div>
+<div class="reveal" style="margin-top:56px;">
+<div class="info-label" style="color:var(--accent);">Exploration 2 · Too Clean</div>
+<h3 class="case-h2" style="font-size:clamp(24px,3vw,34px); margin-top:12px;">Clean enough to look good. <span class="accent">Not clear enough to work.</span></h3>
+<div class="case-body">
+<p>The lesson from Exploration 1 was clear: users needed to see their source of fund before committing, so it moved to the main screen. That was the right call. But stripping things back too far created a new problem. The input fields looked like display text, with nothing to signal they were tappable. The rate details hid one tap away behind a bottom sheet. It read as bare rather than intentional. Minimal and clear are not the same thing.</p>
+</div>
+<figure class="case-shot inline reveal">
+<button class="shot-frame ts-sec" data-caption="Exploration 2 · Too Clean" aria-label="Enlarge: Exploration 2 · Too Clean"></button>
+</figure>
+<p class="img-caption">Source of fund came forward, but the fields didn't look interactive and the rate hid behind a sheet.</p>
+</div>
+<div class="reveal" style="margin-top:56px;">
+<div class="info-label" style="color:var(--accent);">Exploration 3 · Almost There</div>
+<h3 class="case-h2" style="font-size:clamp(24px,3vw,34px); margin-top:12px;">The closest one. <span class="accent">But two things broke.</span></h3>
+<div class="case-body">
+<p>Exploration 3 took it further. Source of fund now sat in the same card as the destination account, making the link between account and balance clearer. It was the most complete version yet. But two things still didn't work. The destination account and source of fund looked visually identical, so users had to figure out which was which from context alone. And tabs were still there. When someone asked me to explain the currency dropdown placement and I couldn't, that was the signal. If you can't defend a design choice, it is usually the wrong one.</p>
+</div>
+<figure class="case-shot inline reveal">
+<button class="shot-frame ts-sec" data-caption="Exploration 3 · Almost There" aria-label="Enlarge: Exploration 3 · Almost There"></button>
+</figure>
+<p class="img-caption">Better structure, but the two account cards were indistinguishable and the tabs still hadn't earned their place.</p>
+</div>
+</section><section class="case-section" id="principle"><div class="section-mobile-tag" aria-hidden="true"><span class="num">06</span><span class="label">Principle</span></div>
+
+<div class="reveal">
+<h2 class="case-h2">Don't make users guess<br/><span class="accent">the things that matter.</span></h2>
+<div class="case-body">
+<p>Across all three explorations, the same problem kept surfacing: users were left to work out the things that mattered most on their own. The final design had one job, to make sure none of these questions ever needed to be asked.</p>
+</div>
+<div class="case-list" style="margin-top:32px;">
+<div class="case-list-item">Which account is this coming from?</div>
+<div class="case-list-item">Is this rate actually live?</div>
+<div class="case-list-item">Do I even have enough balance?</div>
+</div>
+</div></section><section class="case-section" id="final"><div class="section-mobile-tag" aria-hidden="true"><span class="num">07</span><span class="label">Final Design</span></div>
+
+<div class="reveal">
+<h2 class="case-h2">Everything the user needs.<br/><span class="accent">Nothing they don't.</span></h2>
+<div class="case-body">
+<p>Tabs are gone. Showing one side at a time was the core problem in Exploration 1, so both sides are visible from the moment the screen opens, and both are editable, because some people start from how much they want to buy and others from how much they want to spend. Currency, account, and balance now sit together as one unit, and the live rate stays visible between the two panels. Everything needed to make a confident decision is right there, before they tap Continue.</p>
+</div>
+<figure class="case-shot inline reveal">
+<button class="shot-frame ts-sec ts-alt" data-caption="Final Design · Currency Exchange" aria-label="Enlarge: final design"></button>
+<figcaption class="shot-caption">Final Design · Currency Exchange</figcaption>
+</figure>
+<div class="case-list" style="margin-top:32px;">
+<div class="case-list-item">Both sides visible and editable from the first second.</div>
+<div class="case-list-item">Currency, account, and balance grouped as one unit.</div>
+<div class="case-list-item">Live rate always on screen, with a clear swap control.</div>
+</div>
+<figure class="case-shot inline reveal" style="margin-top:40px;">
+<button class="shot-frame ts-sec" data-caption="The full transaction flow" aria-label="Enlarge: full transaction flow"></button>
+</figure>
+<p class="img-caption">From the nobu Go home screen, through Face ID, to a completed exchange.</p>
+</div></section><section class="case-section" id="reflection"><div class="section-mobile-tag" aria-hidden="true"><span class="num">08</span><span class="label">Reflection</span></div>
+
+<div class="reveal">
+<h2 class="case-h2">It wasn't perfect. <span class="accent">But it was earned.</span></h2>
+<div class="case-body">
+<p>Getting two currencies, a live rate, and multiple accounts onto one screen without overwhelming anyone took real iteration. I don't have hard metrics, the feature was new and there were no baselines yet, but the PM's feedback after launch was positive, and there were no significant usability complaints in the first release cycle.</p>
+</div>
+<div class="info-stack">
+<div class="info-block">
+<div class="info-label">If I went back, one</div>
+<div class="info-text">Real user research. We had competitor analysis and strong business context, but no direct insight into how Nobu's users actually think about foreign currency.</div>
+</div>
+<div class="info-block">
+<div class="info-label">If I went back, two</div>
+<div class="info-text">A rate lock with a countdown timer. We left it out for timeline and backend reasons, but users deserve to know the rate they see is the rate they'll get. It's the biggest gap in this design.</div>
+</div>
+<div class="info-block">
+<div class="info-label">If I went back, three</div>
+<div class="info-text">Usability testing on the swap button. It works, but I'd want real data on whether people actually discover it, or quietly navigate away to start over.</div>
+</div>
+</div>
+<div class="case-body" style="margin-top:32px;">
+<p><strong>The lesson:</strong> complexity isn't something you design away. It's something you design through.</p>
+</div>
+</div></section></div></div>
+<section class="more-projects">
+<div class="more-header reveal">
+<div class="more-label">Keep exploring</div>
+<h2 class="more-title">More work</h2>
+</div>
+<div class="more-grid cols-2">
+<a class="more-card reveal" href="toko-mama.html">
+<div class="more-card-inner">
+<div class="more-img" style="background:linear-gradient(135deg,#0d2005 0%,#1a4208 50%,#0a100a 100%);"></div>
+<div class="more-tag">Toko Mama · POS</div>
+<h3 class="more-title-card">Improving Hold Cart in a High-Traffic POS</h3>
+<div class="more-arrow">
+<svg aria-hidden="true" fill="none" height="12" viewbox="0 0 12 12" width="12"><path d="M2 10L10 2M10 2H3M10 2V9" stroke="#F0EFE9" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+</div>
+</div>
+</a>
+<a class="more-card reveal reveal-delay-1" href="aryaduta.html">
+<div class="more-card-inner">
+<div class="more-img" style="background:linear-gradient(135deg,#2a1c08 0%,#5a3a12 50%,#100a06 100%);"></div>
+<div class="more-tag">Aryaduta Hotel · Visual</div>
+<h3 class="more-title-card">Hospitality App &amp; Staff Tools</h3>
+<div class="more-arrow">
+<svg aria-hidden="true" fill="none" height="12" viewbox="0 0 12 12" width="12"><path d="M2 10L10 2M10 2H3M10 2V9" stroke="#F0EFE9" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"></path></svg>
+</div>
+</div>
+</a>
+</div>
+</section>
+<section class="case-contact">
+  <p class="cc-eyebrow">Let's talk</p>
+  <h2 class="cc-title">Like what you see?</h2>
+  <div class="cc-links">
+    <a href="mailto:hello.leonardobudi@gmail.com" class="cc-primary">Email me</a>
+    <a href="https://linkedin.com/in/leonardobudi" target="_blank" rel="noopener noreferrer" class="cc-secondary">LinkedIn &#8599;</a>
+    <a href="LeonardoBudi_CV2026_EU.pdf" target="_blank" rel="noopener noreferrer" class="cc-secondary">Download CV &#8599;</a>
+  </div>
+</section>
+
+</main>
+
+<footer>
+<div class="footer-left">© 2026 Leonardo Budi Kurniawan</div>
+<div class="footer-right">Built with intention, not just opinion.</div>
+</footer>
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  if (window.matchMedia('(pointer: fine)').matches) {
+    let mx=0,my=0,cx=0,cy=0;
+    document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+    (function loop(){
+      cx += (mx-cx) * 0.22;
+      cy += (my-cy) * 0.22;
+      cursor.style.left = cx+'px';
+      cursor.style.top  = cy+'px';
+      requestAnimationFrame(loop);
+    })();
+    document.querySelectorAll('a, button').forEach(el => {
+      const isNavLink = el.classList.contains('nav-logo') || el.classList.contains('nav-back');
+      el.addEventListener('mouseenter', () => {
+        if (isNavLink) return;
+        cursor.classList.add('hover');
+        const bg = getComputedStyle(el).backgroundColor;
+        const m = bg.match(/\d+/g);
+        if (m) {
+          const [r,g,b] = m.map(Number);
+          const brightness = (r*299+g*587+b*114)/1000;
+          if (brightness > 150) cursor.classList.add('on-light');
+        }
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.classList.remove('hover');
+        cursor.classList.remove('on-light');
+      });
+    });
+  }
+
+  // SCROLL REVEAL
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.08, rootMargin: '0px 0px -48px 0px' });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // OPTION 3: a section stays active until the NEXT heading reaches the top line,
+  // so the rail always names the content the reader is actually looking at.
+  (function(){
+    var items = document.querySelectorAll('.rail-item');
+    var map = {};
+    items.forEach(function(i){ map[i.getAttribute('href').slice(1)] = i; });
+    var sections = Array.prototype.slice.call(
+      document.querySelectorAll('.case-content .case-section')
+    );
+    if (!sections.length) return;
+    var THRESH = 130; // px below viewport top (just under the fixed nav)
+    var current = null;
+    function update(){
+      var active = sections[0];
+      for (var i = 0; i < sections.length; i++){
+        if (sections[i].getBoundingClientRect().top - THRESH <= 0) active = sections[i];
+        else break;
+      }
+      if (active.id !== current){
+        current = active.id;
+        items.forEach(function(i){ i.classList.remove('active'); });
+        if (map[current]) map[current].classList.add('active');
+      }
+    }
+    var ticking = false;
+    function onScroll(){
+      if (!ticking){
+        ticking = true;
+        requestAnimationFrame(function(){ update(); ticking = false; });
+      }
+    }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll);
+    update();
+  })();
+
+  // LIGHTBOX: click any screen to preview it large
+  (function(){
+    var current = null;
+    function close(){
+      if (!current) return;
+      var box = current; current = null;
+      box.classList.remove('open');
+      document.body.style.overflow = ''; if (box._prev && box._prev.focus) box._prev.focus();
+      setTimeout(function(){ box.remove(); }, 250);
+    }
+    function open(frame){
+      close();
+      var clone = frame.cloneNode(true);
+      clone.removeAttribute('aria-label');
+      var caption = frame.getAttribute('data-caption') || '';
+      var box = document.createElement('div');
+      box.className = 'lightbox';
+      box.setAttribute('role','dialog');
+      box.setAttribute('aria-modal','true');
+      box.setAttribute('aria-label', (caption || 'Image') + ' preview');
+      box._prev = document.activeElement;
+      var stage = document.createElement('div');
+      stage.className = 'lightbox-stage';
+      stage.appendChild(clone);
+      if (caption){
+        var cap = document.createElement('p');
+        cap.className = 'lightbox-cap';
+        cap.textContent = caption;
+        stage.appendChild(cap);
+      }
+      var closeBtn = document.createElement('button');
+      closeBtn.className = 'lightbox-close';
+      closeBtn.setAttribute('aria-label', 'Close preview');
+      closeBtn.innerHTML = '&times;';
+      box.appendChild(stage);
+      box.appendChild(closeBtn);
+      box.addEventListener('click', function(e){
+        if (e.target === box || e.target === closeBtn) close();
+      });
+      document.body.appendChild(box);
+      document.body.style.overflow = 'hidden';
+      requestAnimationFrame(function(){ box.classList.add('open'); closeBtn.focus(); });
+      current = box;
+    }
+    document.addEventListener('keydown', function(e){ if (e.key === 'Escape') close(); });
+    document.querySelectorAll('.shot-frame').forEach(function(f){
+      f.addEventListener('click', function(){ open(f); });
+    });
+  })();
+</script>
+</body>
+</html>
